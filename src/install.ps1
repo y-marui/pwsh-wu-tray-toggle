@@ -10,4 +10,4 @@ $s.WorkingDirectory = $PSScriptRoot
 $s.Description      = 'Windows Update Tray Toggle'
 $s.Save()
 
-Write-Host "Installed: $lnk"
+Write-Output "Installed: $lnk"
