@@ -6,6 +6,15 @@ on:
   pull_request:
 
 jobs:
+  security:
+    name: Security scan (pre-commit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pre-commit/action@v3.0.1
+
   lint:
     name: Lint
     runs-on: windows-latest
@@ -23,7 +32,7 @@ jobs:
 
   build:
     name: Build
-    needs: [lint]
+    needs: [security, lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

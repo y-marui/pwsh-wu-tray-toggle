@@ -1,5 +1,19 @@
 # AI_CONTEXT.md
 
+## Reference Order
+
+AI はタスク開始時に以下の順で参照する:
+
+1. README.md（概要・セットアップ）
+2. DEVELOPING.md（ビルド・実装規約・命名規則）
+
+必要に応じて以下を参照する（順不同）:
+- CONTRIBUTING.md（PR・Issue ルール）
+- docs/architecture.md（モジュール・コンポーネント構造）
+- docs/file-map.md（ファイルレベルの依存関係 ※情報が足りない・古い場合は適宜探索し、追記・更新する）
+- docs/specification.md（機能仕様・データフロー）
+- docs/ui-design.md（UI 設計・コンポーネント仕様）
+
 ## Project Overview
 
 Windows Update の自動更新をシステムトレイから停止・再開できる PowerShell 製トレイアプリ。
