@@ -9,17 +9,17 @@
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/y-marui?style=social)](https://github.com/sponsors/y-marui)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-donate-yellow.svg)](https://www.buymeacoffee.com/y.marui)
 
-Windows Update の自動更新を通知領域のトレイアイコンから停止・再開できる PowerShell 製トレイアプリ。
+Windows Update の自動更新を通知領域のトレイアイコンから停止・再開できる C# 製トレイアプリ。
 
 ## Setup
 
-PowerShell と管理者権限が必要です。
+Windows と管理者権限が必要です（ビルドには .NET 8 SDK が必要）。
 
 ```powershell
 make install
 ```
 
-デスクトップに `WU_TrayIcon.lnk` ショートカットが作成されます。ダブルクリックで起動します。
+自己完結の単一exeをビルドし、デスクトップに `WU_TrayIcon.lnk` ショートカットを作成します。ダブルクリックで起動します。
 
 ## Usage
 
@@ -30,7 +30,7 @@ make install
 
 トレイアイコンを右クリックしてメニューを操作します：
 
-- **現在の状態を確認** — ポリシーとサービスの状態をポップアップ表示
+- **現在の状態を確認** — アプリバージョン、ポリシー、サービスの状態をポップアップ表示
 - **停止 (制御開始)** — グループポリシー経由で Windows Update を停止
 - **再開 (通常)** — Windows Update を通常モードに戻す
 

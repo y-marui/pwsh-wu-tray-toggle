@@ -1,1 +1,6 @@
 .claude/
+
+# .NET build output
+bin/
+obj/
+dist/

@@ -9,17 +9,17 @@
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/y-marui?style=social)](https://github.com/sponsors/y-marui)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-donate-yellow.svg)](https://www.buymeacoffee.com/y.marui)
 
-A PowerShell system tray app to stop and resume Windows Update from the notification area.
+A C# system tray app to stop and resume Windows Update from the notification area.
 
 ## Setup
 
-Requires PowerShell and administrator privileges.
+Requires Windows and administrator privileges (building requires the .NET 8 SDK).
 
 ```powershell
 make install
 ```
 
-Creates a shortcut `WU_TrayIcon.lnk` on the desktop. Double-click it to launch the tray icon.
+Builds a self-contained single-file exe and creates a shortcut `WU_TrayIcon.lnk` on the desktop. Double-click it to launch the tray icon.
 
 ## Usage
 
@@ -30,7 +30,7 @@ Creates a shortcut `WU_TrayIcon.lnk` on the desktop. Double-click it to launch t
 
 Right-click the tray icon to access the menu:
 
-- **Check current status** — Shows registry policy and service state
+- **Check current status** — Shows the app version, registry policy, and service state
 - **Stop (disable auto-update)** — Stops Windows Update via group policy
 - **Resume (normal)** — Re-enables Windows Update
 

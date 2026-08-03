@@ -20,20 +20,18 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: PSScriptAnalyzer
-        shell: pwsh
-        run: |
-          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-          $results = Invoke-ScriptAnalyzer -Path src/ -Recurse -Severity Error,Warning
-          if ($results) {
-            $results | Format-Table -AutoSize
-            exit 1
-          }
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet format src/WuTrayToggle/WuTrayToggle.csproj --verify-no-changes
 
   build:
     name: Build
     needs: [security, lint]
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "All checks passed"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet publish src/WuTrayToggle -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o dist
