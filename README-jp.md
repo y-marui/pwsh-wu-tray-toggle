@@ -13,7 +13,15 @@ Windows Update の自動更新を通知領域のトレイアイコンから停�
 
 ## Setup
 
-Windows と管理者権限が必要です（ビルドには .NET 8 SDK が必要）。
+Windows と管理者権限が必要です。
+
+### インストーラーから（推奨）
+
+[Releases](https://github.com/y-marui/pwsh-wu-tray-toggle/releases) から最新の `WuTrayToggle-vX.Y.Z-win-x64.msi` をダウンロードして実行します。UAC昇格後、スタートメニューとデスクトップにショートカットが作成されます。アンインストールは「アプリと機能」から行えます。
+
+### ソースからビルドする場合
+
+.NET 8 SDK が必要です。
 
 ```powershell
 make install
@@ -25,8 +33,9 @@ make install
 
 | コマンド | 説明 |
 |---|---|
-| `make install` | デスクトップにショートカットをインストール |
+| `make install` | ビルドしてデスクトップにショートカットをインストール |
 | `make uninstall` | ショートカットを削除 |
+| `make msi` | MSIインストーラーを `dist/` にビルド |
 
 トレイアイコンを右クリックしてメニューを操作します：
 

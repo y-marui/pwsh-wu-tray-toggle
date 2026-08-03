@@ -16,6 +16,7 @@ C# (.NET 8, WinForms) 製システムトレイアプリ。`NotifyIcon` でトレ
 | ディレクトリ | 役割 |
 |---|---|
 | `src/WuTrayToggle/` | C# プロジェクト本体（.csproj + ソース） |
+| `installer/` | MSIインストーラー定義（WiX Toolset v5） |
 | `docs/dev-charter/` | 開発憲章（git subtree） |
 | `docs/` | プロジェクトドキュメント |
 
@@ -28,3 +29,4 @@ C# (.NET 8, WinForms) 製システムトレイアプリ。`NotifyIcon` でトレ
 | `Microsoft.Win32.Registry` | WU ポリシー(`NoAutoUpdate`)・サービス起動種別の読み書き |
 | `System.ServiceProcess.ServiceController` (NuGet) | `wuauserv` サービスの状態取得・起動・停止 |
 | `IShellLinkW`/`IPersistFile` (COM interop) | ショートカット（.lnk）ファイルの作成・削除 |
+| WiX Toolset v5 (`WixToolset.Sdk`, NuGet) | `installer/` のMSIビルド（`dotnet build` で完結、Visual Studio拡張不要） |

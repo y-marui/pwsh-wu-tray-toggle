@@ -13,7 +13,15 @@ A C# system tray app to stop and resume Windows Update from the notification are
 
 ## Setup
 
-Requires Windows and administrator privileges (building requires the .NET 8 SDK).
+Requires Windows and administrator privileges.
+
+### From the installer (recommended)
+
+Download the latest `WuTrayToggle-vX.Y.Z-win-x64.msi` from [Releases](https://github.com/y-marui/pwsh-wu-tray-toggle/releases) and run it. After the UAC prompt, Start Menu and desktop shortcuts are created. Uninstall from "Apps & features".
+
+### Building from source
+
+Requires the .NET 8 SDK.
 
 ```powershell
 make install
@@ -25,8 +33,9 @@ Builds a self-contained single-file exe and creates a shortcut `WU_TrayIcon.lnk`
 
 | Command | Description |
 |---|---|
-| `make install` | Install desktop shortcut |
+| `make install` | Build and install a desktop shortcut |
 | `make uninstall` | Remove desktop shortcut |
+| `make msi` | Build the MSI installer into `dist/` |
 
 Right-click the tray icon to access the menu:
 

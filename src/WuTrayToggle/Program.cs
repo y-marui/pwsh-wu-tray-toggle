@@ -19,6 +19,12 @@ internal static class Program
                 case "--uninstall":
                     ShortcutManager.Uninstall();
                     return;
+                case "--disable-startup":
+                    // Invoked by the MSI uninstaller: the Startup-folder autostart
+                    // shortcut is created at runtime via the tray menu, so MSI has
+                    // no record of it and won't remove it on its own.
+                    ShortcutManager.DisableStartup();
+                    return;
                 case "--elevated-stop":
                     WindowsUpdateController.Stop();
                     return;

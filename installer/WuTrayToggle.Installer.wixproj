@@ -1,0 +1,16 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <PropertyGroup>
+    <!-- Keep in sync with src/WuTrayToggle/WuTrayToggle.csproj's <Version>. -->
+    <ProductVersion>1.0.0</ProductVersion>
+    <PublishDir>..\dist</PublishDir>
+    <OutputName>WuTrayToggle-v$(ProductVersion)-win-x64</OutputName>
+    <Platform>x64</Platform>
+    <DefineConstants>ProductVersion=$(ProductVersion);PublishDir=$(PublishDir)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+  </ItemGroup>
+
+</Project>

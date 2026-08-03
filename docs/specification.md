@@ -24,6 +24,20 @@ Windows Update の自動更新をシステムトレイから停止・再開す�
 
 ## インストール
 
+配布方法は2通りある。
+
+### MSIインストーラー（エンドユーザー向け、推奨）
+
+`installer/`（WiX Toolset v5）が `WuTrayToggle-vX.Y.Z-win-x64.msi` をビルドする（`make msi`）。
+
+- マシン単位（per-machine）インストール。`%ProgramFiles%\WuTrayToggle\WuTrayToggle.exe` に配置するため、インストール自体にUAC昇格が必要
+- スタートメニュー・デスクトップショートカットはMSIネイティブの機能で作成・追跡し、アンインストール時に自動削除される（`ShortcutManager`/`--install` は使わない）
+- Add/Remove Programs（アプリと機能）に登録される（MSI標準機能）
+- アンインストール時、deferred custom action として `WuTrayToggle.exe --disable-startup` を実行し、ユーザーが後から有効化していた「ログイン時に自動起動」（スタートアップフォルダ、MSIの管理外）も解除する
+- `UpgradeCode` は固定GUID（`059381dc-b129-4c96-b6ef-9644338a7330`）。将来のバージョンアップ時に上書きインストールできるよう、変更しない
+
+### `--install`/`--uninstall`（ソースビルド向け）
+
 `src/WuTrayToggle/ShortcutManager.cs` が `--install` 引数呼び出し時にデスクトップへ `WU_TrayIcon.lnk` を作成する（`IShellLinkW`/`IPersistFile` COM interop）。
 ショートカットは自exe（`Environment.ProcessPath`）を直接指すため、PowerShellの起動を経由しない。
 `--uninstall` 引数、または `make uninstall` でショートカットを削除する。

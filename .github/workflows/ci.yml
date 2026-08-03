@@ -35,3 +35,4 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - run: dotnet publish src/WuTrayToggle -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o dist
+      - run: dotnet build installer/WuTrayToggle.Installer.wixproj -c Release -o dist
