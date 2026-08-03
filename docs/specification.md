@@ -34,8 +34,15 @@ Windows Update の自動更新をシステムトレイから停止・再開す�
 レジストリの `Run` キー等は使用せず、ユーザー単位のスタートアップフォルダのみを使う（永続的なレジストリインストールを避ける方針に従う）。
 `--uninstall`（`make uninstall` 相当）実行時は、このスタートアップ登録も合わせて解除される。
 
+## ローカライゼーション
+
+`docs/dev-charter/LOCALIZATION_POLICY.md` に従い、メニュー・トレイツールチップ・メッセージボックス・バルーン通知のテキストを日本語/英語/中国語/ヒンディー語/スペイン語/フランス語/ポルトガル語の7言語に対応する。
+
+- 言語決定の優先順位: ユーザー設定（トレイメニュー「言語」で選択、`%APPDATA%\WuTrayToggle\language.txt` に永続化）＞システムのUI言語（`GetUserDefaultUILanguage` で判定）＞英語
+- 文字列は `src/WuTrayToggle/Strings.cs` に集約。中国語/ヒンディー語/スペイン語/フランス語/ポルトガル語はネイティブレビュー未実施
+- `<InvariantGlobalization>true</InvariantGlobalization>` のため `CultureInfo` はシステム言語を反映しない。そのため `Localization.cs` は Win32 API を直接 P/Invoke してシステムのUI言語を取得する
+
 ## 既知の制約
 
 - Windows 専用（System.Windows.Forms が必要）
 - レジストリ操作とサービス制御に管理者権限が必要
-- UI テキストが日本語ハードコード（Issue #3 参照）

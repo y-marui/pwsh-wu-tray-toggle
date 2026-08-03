@@ -17,14 +17,14 @@ internal static class WindowsUpdateController
     public static string GetTrayText()
     {
         return GetState() == TrayState.Stopped
-            ? "WU: 停止中 (制御モード)"
-            : "WU: 稼働中 (通常モード)";
+            ? Strings.TrayTextStopped
+            : Strings.TrayTextRunning;
     }
 
     public static string GetStatusReport()
     {
-        var policyText = GetNoAutoUpdate() == 1 ? "1 (停止)" : "0 (稼働中)";
-        return $"【現在の詳細状態】\nポリシー(NoAutoUpdate): {policyText}\nサービス状態: {GetServiceStatusText()}";
+        var policyText = GetNoAutoUpdate() == 1 ? Strings.PolicyStopped : Strings.PolicyRunning;
+        return string.Format(Strings.StatusReportFormat, policyText, GetServiceStatusText());
     }
 
     public static void Stop()
@@ -94,11 +94,11 @@ internal static class WindowsUpdateController
         try
         {
             using var service = new ServiceController(ServiceName);
-            return service.Status == ServiceControllerStatus.Running ? "実行中" : "停止中";
+            return service.Status == ServiceControllerStatus.Running ? Strings.ServiceRunning : Strings.ServiceStopped;
         }
         catch (InvalidOperationException)
         {
-            return "サービス不明";
+            return Strings.ServiceUnknown;
         }
     }
 

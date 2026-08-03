@@ -16,4 +16,8 @@ _最終更新: 2026-08-03_
 | `src/WuTrayToggle/WindowsUpdateController.cs` | レジストリ確認・サービス状態確認・WU 停止/再開 | `Microsoft.Win32.Registry`, `System.ServiceProcess` |
 | `src/WuTrayToggle/ShortcutManager.cs` | デスクトップショートカット作成・削除、ログイン時自動起動(スタートアップフォルダ)の登録・解除 | `IShellLinkW`/`IPersistFile` (COM interop) |
 | `src/WuTrayToggle/TrayState.cs` | トレイ状態(Running/Stopped)の列挙型 | — |
+| `src/WuTrayToggle/AppLanguage.cs` | 対応7言語の列挙型 | — |
+| `src/WuTrayToggle/Localization.cs` | 表示言語の解決(ユーザー設定＞システム言語＞英語)。`GetUserDefaultUILanguage` をP/Invoke | `AppSettings` |
+| `src/WuTrayToggle/AppSettings.cs` | 言語設定の永続化(`%APPDATA%\WuTrayToggle\language.txt`) | — |
+| `src/WuTrayToggle/Strings.cs` | UI文字列テーブル(7言語) | `Localization` |
 | `archives/icons/*.png` | `Assets/*.ico` の元絵(透過PNG)。差し替え時はここから正方形化・多重解像度化して再生成する | — |

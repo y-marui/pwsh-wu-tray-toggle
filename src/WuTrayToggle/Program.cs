@@ -31,7 +31,7 @@ internal static class Program
         using var mutex = new Mutex(initiallyOwned: true, MutexName, out var createdNew);
         if (!createdNew)
         {
-            MessageBox.Show("WU_TrayIcon はすでに起動しています。", "WU トレイ");
+            MessageBox.Show(Strings.AlreadyRunning, Strings.TrayTitle);
             return;
         }
 

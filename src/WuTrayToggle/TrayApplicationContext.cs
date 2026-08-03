@@ -5,27 +5,59 @@ namespace WuTrayToggle;
 
 internal sealed class TrayApplicationContext : ApplicationContext
 {
+    private static readonly (AppLanguage? Language, Func<string> Name)[] LanguageOptions =
+    {
+        (null, () => Strings.MenuLanguageSystem),
+        (AppLanguage.Japanese, () => Strings.LanguageNameJapanese),
+        (AppLanguage.English, () => Strings.LanguageNameEnglish),
+        (AppLanguage.Chinese, () => Strings.LanguageNameChinese),
+        (AppLanguage.Hindi, () => Strings.LanguageNameHindi),
+        (AppLanguage.Spanish, () => Strings.LanguageNameSpanish),
+        (AppLanguage.French, () => Strings.LanguageNameFrench),
+        (AppLanguage.Portuguese, () => Strings.LanguageNamePortuguese),
+    };
+
     private readonly NotifyIcon _notifyIcon;
+    private readonly ToolStripItem _checkItem;
+    private readonly ToolStripMenuItem _startupItem;
+    private readonly ToolStripMenuItem _languageMenu;
+    private readonly ToolStripMenuItem[] _languageItems;
+    private readonly ToolStripItem _stopItem;
+    private readonly ToolStripItem _startItem;
+    private readonly ToolStripItem _exitItem;
 
     public TrayApplicationContext()
     {
         var menu = new ContextMenuStrip();
-        var checkItem = menu.Items.Add("現在の状態を確認");
+        _checkItem = menu.Items.Add(string.Empty);
         menu.Items.Add(new ToolStripSeparator());
-        var startupItem = (ToolStripMenuItem)menu.Items.Add("ログイン時に自動起動");
-        menu.Items.Add(new ToolStripSeparator());
-        var stopItem = menu.Items.Add("停止 (制御開始)");
-        var startItem = menu.Items.Add("再開 (通常)");
-        menu.Items.Add(new ToolStripSeparator());
-        var exitItem = menu.Items.Add("終了");
+        _startupItem = (ToolStripMenuItem)menu.Items.Add(string.Empty);
 
-        startupItem.Checked = ShortcutManager.IsStartupEnabled();
+        _languageMenu = new ToolStripMenuItem();
+        _languageItems = new ToolStripMenuItem[LanguageOptions.Length];
+        for (var i = 0; i < LanguageOptions.Length; i++)
+        {
+            var language = LanguageOptions[i].Language;
+            var item = new ToolStripMenuItem();
+            item.Click += (_, _) => ChangeLanguage(language);
+            _languageMenu.DropDownItems.Add(item);
+            _languageItems[i] = item;
+        }
 
-        checkItem.Click += (_, _) => ShowStatus();
-        startupItem.Click += (_, _) => ToggleStartup(startupItem);
-        stopItem.Click += (_, _) => RunElevatedAction("--elevated-stop", TrayState.Stopped);
-        startItem.Click += (_, _) => RunElevatedAction("--elevated-start", TrayState.Running);
-        exitItem.Click += (_, _) => ExitThread();
+        menu.Items.Add(_languageMenu);
+        menu.Items.Add(new ToolStripSeparator());
+        _stopItem = menu.Items.Add(string.Empty);
+        _startItem = menu.Items.Add(string.Empty);
+        menu.Items.Add(new ToolStripSeparator());
+        _exitItem = menu.Items.Add(string.Empty);
+
+        _checkItem.Click += (_, _) => ShowStatus();
+        _startupItem.Click += (_, _) => ToggleStartup();
+        _stopItem.Click += (_, _) => RunElevatedAction("--elevated-stop", TrayState.Stopped);
+        _startItem.Click += (_, _) => RunElevatedAction("--elevated-start", TrayState.Running);
+        _exitItem.Click += (_, _) => ExitThread();
+
+        menu.Opening += (_, _) => RefreshMenuText();
 
         _notifyIcon = new NotifyIcon
         {
@@ -33,15 +65,43 @@ internal sealed class TrayApplicationContext : ApplicationContext
             Visible = true,
         };
 
+        RefreshMenuText();
+        RefreshStatus();
+    }
+
+    private void RefreshMenuText()
+    {
+        _checkItem.Text = Strings.MenuCheckStatus;
+
+        _startupItem.Text = Strings.MenuStartup;
+        _startupItem.Checked = ShortcutManager.IsStartupEnabled();
+
+        _languageMenu.Text = Strings.MenuLanguage;
+        var currentOverride = Localization.UserOverride;
+        for (var i = 0; i < LanguageOptions.Length; i++)
+        {
+            _languageItems[i].Text = LanguageOptions[i].Name();
+            _languageItems[i].Checked = LanguageOptions[i].Language == currentOverride;
+        }
+
+        _stopItem.Text = Strings.MenuStop;
+        _startItem.Text = Strings.MenuStart;
+        _exitItem.Text = Strings.MenuExit;
+    }
+
+    private void ChangeLanguage(AppLanguage? language)
+    {
+        Localization.SetOverride(language);
+        RefreshMenuText();
         RefreshStatus();
     }
 
     private static void ShowStatus()
     {
-        MessageBox.Show(WindowsUpdateController.GetStatusReport(), "WU 状態確認");
+        MessageBox.Show(WindowsUpdateController.GetStatusReport(), Strings.StatusTitle);
     }
 
-    private static void ToggleStartup(ToolStripMenuItem item)
+    private void ToggleStartup()
     {
         if (ShortcutManager.IsStartupEnabled())
         {
@@ -52,7 +112,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
             ShortcutManager.EnableStartup();
         }
 
-        item.Checked = ShortcutManager.IsStartupEnabled();
+        _startupItem.Checked = ShortcutManager.IsStartupEnabled();
     }
 
     private void RunElevatedAction(string argument, TrayState expectedState)
@@ -85,24 +145,24 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
         if (cancelled)
         {
-            ShowBalloon("操作をキャンセルしました", ToolTipIcon.Warning);
+            ShowBalloon(Strings.BalloonCancelled, ToolTipIcon.Warning);
         }
         else if (WindowsUpdateController.GetState() == expectedState)
         {
             var message = expectedState == TrayState.Stopped
-                ? "Windows Update を停止しました"
-                : "Windows Update を再開しました";
+                ? Strings.BalloonStopped
+                : Strings.BalloonResumed;
             ShowBalloon(message, ToolTipIcon.Info);
         }
         else
         {
-            ShowBalloon("操作に失敗しました", ToolTipIcon.Error);
+            ShowBalloon(Strings.BalloonFailed, ToolTipIcon.Error);
         }
     }
 
     private void ShowBalloon(string text, ToolTipIcon icon)
     {
-        _notifyIcon.BalloonTipTitle = "WU トレイ";
+        _notifyIcon.BalloonTipTitle = Strings.TrayTitle;
         _notifyIcon.BalloonTipText = text;
         _notifyIcon.BalloonTipIcon = icon;
         _notifyIcon.ShowBalloonTip(3000);
