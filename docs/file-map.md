@@ -1,6 +1,6 @@
 # File Map
 
-_最終更新: 2026-08-03_
+_最終更新: 2026-08-04_
 
 ## Core
 
@@ -21,3 +21,5 @@ _最終更新: 2026-08-03_
 | `src/WuTrayToggle/AppSettings.cs` | 言語設定の永続化(`%APPDATA%\WuTrayToggle\language.txt`) | — |
 | `src/WuTrayToggle/Strings.cs` | UI文字列テーブル(7言語) | `Localization` |
 | `archives/icons/*.png` | `Assets/*.ico` の元絵(透過PNG)。差し替え時はここから正方形化・多重解像度化して再生成する | — |
+| `installer/WuTrayToggle.Installer.wixproj` | MSIビルド定義(WiX v5 SDK)。`ProductVersion`/`PublishDir` を `DefineConstants` で `.wxs` に渡す | `WixToolset.Sdk`, `WixToolset.UI.wixext` (NuGet) |
+| `installer/Product.wxs` | MSIパッケージ定義。per-machineインストール・ショートカット・`--disable-startup` custom action | `dist/WuTrayToggle.exe`（ビルド前提） |

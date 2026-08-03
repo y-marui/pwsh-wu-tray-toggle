@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-04
+
+### Added
+- MSI installer (`installer/`, WiX Toolset v5, `make msi`): per-machine install to `%ProgramFiles%\WuTrayToggle`, Start Menu and desktop shortcuts, Add/Remove Programs registration. Recommended install path for end users going forward; the exe is no longer attached to releases on its own.
+- `--disable-startup` CLI argument, used by the MSI's uninstall custom action to clean up the Startup-folder autostart shortcut (not tracked by MSI itself, since it's created later via the tray menu).
+- `EnableCompressionInSingleFile` baked into the csproj, shrinking the self-contained publish output from ~154MB to ~72MB.
+
 ## [1.0.0] - 2026-08-03
 
 ### Added
