@@ -6,10 +6,10 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>WuTrayToggle</AssemblyName>
     <RootNamespace>WuTrayToggle</RootNamespace>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
 
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
@@ -19,6 +19,15 @@
 
   <ItemGroup>
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\tray-running.ico">
+      <LogicalName>WuTrayToggle.Assets.tray-running.ico</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\tray-stopped.ico">
+      <LogicalName>WuTrayToggle.Assets.tray-stopped.ico</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

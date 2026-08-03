@@ -7,6 +7,7 @@ namespace WuTrayToggle;
 internal static class ShortcutManager
 {
     private const string ShortcutFileName = "WU_TrayIcon.lnk";
+    private const string StartupShortcutFileName = "WU_TrayIcon.lnk";
 
     public static void Install()
     {
@@ -26,12 +27,45 @@ internal static class ShortcutManager
         {
             File.Delete(path);
         }
+
+        DisableStartup();
+    }
+
+    public static bool IsStartupEnabled()
+    {
+        return File.Exists(GetStartupShortcutPath());
+    }
+
+    public static void EnableStartup()
+    {
+        var exePath = Environment.ProcessPath;
+        if (exePath is null)
+        {
+            return;
+        }
+
+        CreateShortcut(GetStartupShortcutPath(), exePath);
+    }
+
+    public static void DisableStartup()
+    {
+        var path = GetStartupShortcutPath();
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
     }
 
     private static string GetShortcutPath()
     {
         var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         return Path.Combine(desktop, ShortcutFileName);
+    }
+
+    private static string GetStartupShortcutPath()
+    {
+        var startup = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+        return Path.Combine(startup, StartupShortcutFileName);
     }
 
     private static void CreateShortcut(string shortcutPath, string targetPath)

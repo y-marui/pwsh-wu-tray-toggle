@@ -24,7 +24,7 @@ C# (.NET 8, WinForms) 製システムトレイアプリ。`NotifyIcon` でトレ
 | ライブラリ / モジュール | 用途 |
 |---|---|
 | `System.Windows.Forms` | トレイアイコン・コンテキストメニュー・メッセージボックス |
-| `System.Drawing` | 64×64 アイコン画像のプログラム生成 |
+| `System.Drawing` | 埋め込み`.ico`リソースからの `Icon` 読み込み |
 | `Microsoft.Win32.Registry` | WU ポリシー(`NoAutoUpdate`)・サービス起動種別の読み書き |
 | `System.ServiceProcess.ServiceController` (NuGet) | `wuauserv` サービスの状態取得・起動・停止 |
 | `IShellLinkW`/`IPersistFile` (COM interop) | ショートカット（.lnk）ファイルの作成・削除 |
