@@ -24,7 +24,11 @@ internal static class WindowsUpdateController
     public static string GetStatusReport()
     {
         var policyText = GetNoAutoUpdate() == 1 ? Strings.PolicyStopped : Strings.PolicyRunning;
-        return string.Format(Strings.StatusReportFormat, policyText, GetServiceStatusText());
+        return string.Format(
+            Strings.StatusReportFormat,
+            policyText,
+            GetServiceStatusText(),
+            Application.ProductVersion);
     }
 
     public static void Stop()

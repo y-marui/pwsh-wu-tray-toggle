@@ -13,30 +13,45 @@ internal static class AppSettings
         {
             return File.Exists(FilePath) ? File.ReadAllText(FilePath).Trim() : null;
         }
-        catch (IOException)
+        catch (Exception ex) when (IsFileSystemException(ex))
         {
             return null;
         }
     }
 
-    public static void SetLanguageOverride(string? code)
+    public static bool SetLanguageOverride(string? code)
     {
-        var directory = Path.GetDirectoryName(FilePath);
-        if (directory is not null)
+        try
         {
-            Directory.CreateDirectory(directory);
-        }
-
-        if (code is null)
-        {
-            if (File.Exists(FilePath))
+            if (code is null)
             {
-                File.Delete(FilePath);
+                if (File.Exists(FilePath))
+                {
+                    File.Delete(FilePath);
+                }
+
+                return true;
             }
 
-            return;
-        }
+            var directory = Path.GetDirectoryName(FilePath);
+            if (directory is not null)
+            {
+                Directory.CreateDirectory(directory);
+            }
 
-        File.WriteAllText(FilePath, code);
+            File.WriteAllText(FilePath, code);
+            return true;
+        }
+        catch (Exception ex) when (IsFileSystemException(ex))
+        {
+            return false;
+        }
+    }
+
+    private static bool IsFileSystemException(Exception exception)
+    {
+        return exception is IOException
+            or UnauthorizedAccessException
+            or System.Security.SecurityException;
     }
 }

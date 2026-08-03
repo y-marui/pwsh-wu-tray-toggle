@@ -91,7 +91,12 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
     private void ChangeLanguage(AppLanguage? language)
     {
-        Localization.SetOverride(language);
+        if (!Localization.SetOverride(language))
+        {
+            ShowBalloon(Strings.BalloonLanguageSaveFailed, ToolTipIcon.Error);
+            return;
+        }
+
         RefreshMenuText();
         RefreshStatus();
     }

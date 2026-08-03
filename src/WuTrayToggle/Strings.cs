@@ -149,13 +149,13 @@ internal static class Strings
         "Status do serviço desconhecido");
 
     public static string StatusReportFormat => L(
-        "【現在の詳細状態】\nポリシー(NoAutoUpdate): {0}\nサービス状態: {1}",
-        "Current status:\nPolicy (NoAutoUpdate): {0}\nService status: {1}",
-        "当前详细状态：\n策略 (NoAutoUpdate)：{0}\n服务状态：{1}",
-        "वर्तमान विस्तृत स्थिति:\nनीति (NoAutoUpdate): {0}\nसेवा स्थिति: {1}",
-        "Estado actual:\nDirectiva (NoAutoUpdate): {0}\nEstado del servicio: {1}",
-        "État actuel :\nStratégie (NoAutoUpdate) : {0}\nÉtat du service : {1}",
-        "Status atual:\nPolítica (NoAutoUpdate): {0}\nStatus do serviço: {1}");
+        "【現在の詳細状態】\nアプリバージョン: {2}\nポリシー(NoAutoUpdate): {0}\nサービス状態: {1}",
+        "Current status:\nApp version: {2}\nPolicy (NoAutoUpdate): {0}\nService status: {1}",
+        "当前详细状态：\n应用版本：{2}\n策略 (NoAutoUpdate)：{0}\n服务状态：{1}",
+        "वर्तमान विस्तृत स्थिति:\nऐप संस्करण: {2}\nनीति (NoAutoUpdate): {0}\nसेवा स्थिति: {1}",
+        "Estado actual:\nVersión de la aplicación: {2}\nDirectiva (NoAutoUpdate): {0}\nEstado del servicio: {1}",
+        "État actuel :\nVersion de l'application : {2}\nStratégie (NoAutoUpdate) : {0}\nÉtat du service : {1}",
+        "Status atual:\nVersão do aplicativo: {2}\nPolítica (NoAutoUpdate): {0}\nStatus do serviço: {1}");
 
     public static string BalloonStopped => L(
         "Windows Update を停止しました",
@@ -192,6 +192,15 @@ internal static class Strings
         "Error en la operación.",
         "Échec de l'opération.",
         "Falha na operação.");
+
+    public static string BalloonLanguageSaveFailed => L(
+        "言語設定を保存できませんでした",
+        "Could not save the language setting.",
+        "无法保存语言设置。",
+        "भाषा सेटिंग सहेजी नहीं जा सकी।",
+        "No se pudo guardar la configuración de idioma.",
+        "Impossible d'enregistrer le paramètre de langue.",
+        "Não foi possível salvar a configuração de idioma.");
 
     public static string AlreadyRunning => L(
         "WU_TrayIcon はすでに起動しています。",

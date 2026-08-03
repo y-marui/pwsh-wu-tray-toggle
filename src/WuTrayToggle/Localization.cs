@@ -20,9 +20,9 @@ internal static partial class Localization
         _ => null,
     };
 
-    public static void SetOverride(AppLanguage? language)
+    public static bool SetOverride(AppLanguage? language)
     {
-        AppSettings.SetLanguageOverride(language switch
+        var saved = AppSettings.SetLanguageOverride(language switch
         {
             AppLanguage.Japanese => "ja",
             AppLanguage.English => "en",
@@ -33,7 +33,14 @@ internal static partial class Localization
             AppLanguage.Portuguese => "pt",
             _ => null,
         });
+
+        if (!saved)
+        {
+            return false;
+        }
+
         Current = Resolve();
+        return true;
     }
 
     private static AppLanguage Resolve()

@@ -28,7 +28,7 @@ Builds a self-contained single-file exe and creates a shortcut `WU_TrayIcon.lnk`
 
 Right-click the tray icon to access the menu:
 
-- **Check current status** — Shows registry policy and service state
+- **Check current status** — Shows the app version, registry policy, and service state
 - **Stop (disable auto-update)** — Stops Windows Update via group policy
 - **Resume (normal)** — Re-enables Windows Update
 
