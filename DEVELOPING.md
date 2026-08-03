@@ -3,7 +3,7 @@
 ## Requirements
 
 - Windows
-- PowerShell 5.1 or later
+- .NET 8 SDK
 - Administrator privileges (for registry and service access)
 
 ## Setup
@@ -12,24 +12,23 @@
 make install
 ```
 
-Creates `WU_TrayIcon.lnk` on the desktop. Double-click to launch.
+Builds a self-contained single-file exe and creates `WU_TrayIcon.lnk` on the desktop. Double-click to launch.
 
 ## Running Directly
 
 ```powershell
-powershell -NoProfile -STA -WindowStyle Hidden -ExecutionPolicy Bypass -File src/tray.ps1
+dotnet run --project src/WuTrayToggle
 ```
 
 ## Lint
 
 ```powershell
-Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-Invoke-ScriptAnalyzer -Path src/ -Recurse -Severity Error,Warning
+dotnet format src/WuTrayToggle/WuTrayToggle.csproj --verify-no-changes
 ```
 
 ## Conventions
 
-- **Naming:** PascalCase for functions (`Get-MyIcon`), camelCase for local variables
+- **Naming:** PascalCase for classes/methods (`WindowsUpdateController`, `GetState`), camelCase for local variables/fields
 - **Comments:** Explain *why*, not *what* — see `docs/dev-charter/CODE_STYLE.md`
 - **Commit messages:** Conventional Commits format (`feat:`, `fix:`, `docs:`, `chore:`)
 - **Branching:** One branch per feature/fix; merge to `main` via PR

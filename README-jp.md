@@ -7,17 +7,17 @@
 [![CI](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml)
 [![Charter Check](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml)
 
-Windows Update の自動更新を通知領域のトレイアイコンから停止・再開できる PowerShell 製トレイアプリ。
+Windows Update の自動更新を通知領域のトレイアイコンから停止・再開できる C# 製トレイアプリ。
 
 ## Setup
 
-PowerShell と管理者権限が必要です。
+Windows と管理者権限が必要です（ビルドには .NET 8 SDK が必要）。
 
 ```powershell
 make install
 ```
 
-デスクトップに `WU_TrayIcon.lnk` ショートカットが作成されます。ダブルクリックで起動します。
+自己完結の単一exeをビルドし、デスクトップに `WU_TrayIcon.lnk` ショートカットを作成します。ダブルクリックで起動します。
 
 ## Usage
 

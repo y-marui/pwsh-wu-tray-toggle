@@ -25,5 +25,5 @@ labels: bug
 ## Environment
 
 - OS:
-- PowerShell version:
+- App version:
 - Other relevant versions:

@@ -10,7 +10,7 @@
 src/ 配下のファイルを確認し、docs/architecture.md を最新の状態に更新してください。
 
 手順：
-1. src/ 配下の全 .ps1 ファイルを読む
+1. src/ 配下の全 .cs ファイルを読む
 2. docs/architecture.md を読む
 3. 以下のフォーマットで上書き保存する：
    - ## Overview（3行以内）
@@ -36,7 +36,7 @@ src/ 配下のファイルを確認し、docs/architecture.md を最新の状態
 フォーマット：
 | ファイル | 役割 | 主な依存先 |
 |---|---|---|
-| `src/foo.ps1` | 説明 | `System.Windows.Forms` |
+| `src/WuTrayToggle/Foo.cs` | 説明 | `System.Windows.Forms` |
 
 注意：全ファイルを網羅しなくてよい。未探索ファイルは記載しない。
 ```

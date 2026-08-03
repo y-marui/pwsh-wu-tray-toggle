@@ -7,17 +7,17 @@
 [![CI](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml)
 [![Charter Check](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml)
 
-A PowerShell system tray app to stop and resume Windows Update from the notification area.
+A C# system tray app to stop and resume Windows Update from the notification area.
 
 ## Setup
 
-Requires PowerShell and administrator privileges.
+Requires Windows and administrator privileges (building requires the .NET 8 SDK).
 
 ```powershell
 make install
 ```
 
-Creates a shortcut `WU_TrayIcon.lnk` on the desktop. Double-click it to launch the tray icon.
+Builds a self-contained single-file exe and creates a shortcut `WU_TrayIcon.lnk` on the desktop. Double-click it to launch the tray icon.
 
 ## Usage
 

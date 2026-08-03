@@ -4,13 +4,13 @@
 
 ### System Tray Icon
 
-- `src/tray.ps1` の `Get-MyIcon` 関数で 64×64 ビットマップをプログラム生成
+- `src/WuTrayToggle/IconFactory.cs` の `Create` 関数で 64×64 ビットマップをプログラム生成
 - 状態に応じてアイコンを切り替え（詳細は `docs/specification.md` 参照）
 - ダーク/ライトモード切り替え: 未対応
 
 ### Context Menu
 
-右クリックで表示するメニュー：
+右クリックで表示するメニュー（`src/WuTrayToggle/TrayApplicationContext.cs`）：
 
 | メニュー項目 | 動作 |
 |---|---|
