@@ -4,13 +4,16 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   security:
     name: Security scan (pre-commit)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: pre-commit/action@v3.0.1
@@ -18,8 +21,10 @@ jobs:
   lint:
     name: Lint
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -29,8 +34,10 @@ jobs:
     name: Build
     needs: [security, lint]
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'

@@ -55,7 +55,9 @@ Windows Update の自動更新をシステムトレイから停止・再開で�
 
 ## AI Tool Assignments
 
-- **Claude Code:** 実装変更・リファクタリング・CI 設定・ドキュメント更新
+- **使用ツール**：Claude Code、GitHub Copilot
+- **標準担当の正本**：`docs/dev-charter/AI_COLLABORATION_RULES.md` の「AI Tool Responsibilities」と「Rules for Multi-AI Usage」
+- **プロジェクト固有の上書き**：なし
 
 ## Prohibited Actions
 
