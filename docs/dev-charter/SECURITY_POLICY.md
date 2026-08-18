@@ -47,6 +47,8 @@ git config hooks.skip-policy-check true
 | ローカル絶対パスのハードコード | 層2 | 環境依存コードの防止 |
 | 500 KB を超えるファイル | 層2 | リポジトリの肥大化防止 |
 | Markdown の H2〜H6 に日本語を使用 | 層2 | セクションヘッダ言語の統一 |
+| ローカル `../dev-charter` チェックアウトより古い dev-charter のままコミット | 層2 | dev-charter 追従漏れの防止 |
+| `.github/workflows/dev-charter-check.yml` が README の CI テンプレートと不一致のままコミット | 層2 | 採用先 CI 設定の追従漏れの防止 |
 
 `.env` の正しい扱い方：`.env` は絶対にコミットしない。ダミー値のみを含む `.env.example` をコミットする。
 
@@ -98,6 +100,10 @@ cp docs/dev-charter/.gitleaks.toml .
 mkdir -p scripts
 cp docs/dev-charter/scripts/check-markdown-heading-language.sh scripts/
 chmod +x scripts/check-markdown-heading-language.sh
+cp docs/dev-charter/scripts/check-local-charter-version.sh scripts/
+chmod +x scripts/check-local-charter-version.sh
+cp docs/dev-charter/scripts/check-charter-ci-template.sh scripts/
+chmod +x scripts/check-charter-ci-template.sh
 
 # 3. dev-charter 固有のフックを除いた設定を生成する
 awk '
@@ -135,6 +141,8 @@ CI での実行例（GitHub Actions）：
 | `.pre-commit-config.yaml` | pre-commit フック定義（セキュリティ＋品質） |
 | `.gitleaks.toml` | gitleaks カスタムルール設定 |
 | `scripts/check-markdown-heading-language.sh` | Markdown セクションヘッダの言語検証 |
+| `scripts/check-local-charter-version.sh` | ローカルの `../dev-charter` チェックアウトとの VERSION 差分をチェック（sibling が新しい場合はブロック、古い場合は警告） |
+| `scripts/check-charter-ci-template.sh` | `.github/workflows/dev-charter-check.yml` を README-jp.md の CI テンプレートと比較（不一致ならブロック） |
 | `SECURITY_POLICY.md` | このドキュメント |
 
 ---
