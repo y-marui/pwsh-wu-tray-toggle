@@ -55,6 +55,33 @@ repos:
         exclude: '(^|/)\.env\.(example|sample|template)$'
 
   # ----------------------------------------------------------------
+  # Local dev-charter version check
+  # (blocks if sibling ../dev-charter is newer, warns if older)
+  # ----------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: check-local-charter-version
+        name: Check local dev-charter version
+        language: script
+        entry: scripts/check-local-charter-version.sh
+        pass_filenames: false
+        always_run: true
+
+  # ----------------------------------------------------------------
+  # Charter CI template check
+  # (blocks if .github/workflows/dev-charter-check.yml drifted from the
+  # template documented in the installed dev-charter's README-jp.md)
+  # ----------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: check-charter-ci-template
+        name: Check charter CI template
+        language: script
+        entry: scripts/check-charter-ci-template.sh
+        pass_filenames: false
+        always_run: true
+
+  # ----------------------------------------------------------------
   # Hardcoded local absolute paths
   # ----------------------------------------------------------------
   - repo: local

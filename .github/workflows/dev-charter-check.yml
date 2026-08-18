@@ -15,5 +15,3 @@ jobs:
       contents: write
       pull-requests: write
       actions: read
-    with:
-      prefix: docs/dev-charter
