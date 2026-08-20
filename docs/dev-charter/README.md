@@ -31,6 +31,12 @@ Run from your project root:
 bash <(curl -fsSL https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.sh)
 ```
 
+On Windows PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.ps1 | iex
+```
+
 The script automates the git subtree setup and, if Claude Code is available,
 guides you through the initial setup (INSTALL_CHECKLIST).
 
@@ -86,12 +92,22 @@ Run docs/dev-charter/UPDATE_CHECKLIST.md
 
 ## Makefile helper
 
+`git subtree pull` fails if the working tree has uncommitted changes, so this
+target automatically stashes before running and pops afterward.
+
 ```
+.PHONY: update-charter
 update-charter:
 	git remote | grep -q '^dev-charter$$' || \
 	  git remote add dev-charter https://github.com/y-marui/dev-charter
 	git fetch dev-charter
-	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
+	@STASHED=0; \
+	if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$$(git ls-files --others --exclude-standard)" ]; then \
+		git stash push -u -m "update-charter"; \
+		STASHED=1; \
+	fi; \
+	git subtree pull --prefix=docs/dev-charter dev-charter main --squash; \
+	if [ "$$STASHED" = "1" ]; then git stash pop; fi
 ```
 
 ## Version Check (CI)
@@ -106,6 +122,7 @@ name: Dev Charter
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
   workflow_dispatch:
@@ -113,7 +130,7 @@ on:
 jobs:
   check:
     name: Check
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     uses: y-marui/dev-charter/.github/workflows/check-charter.yml@main
     permissions:
       contents: write
@@ -125,6 +142,10 @@ jobs:
 > charter check. If your repository goes fully quiet, no check will run. If you want a
 > guaranteed periodic check regardless of activity, add a low-frequency `schedule`
 > (e.g. monthly) alongside this.
+
+> **Note:** Draft PRs are skipped (a draft can't be merged anyway, so there's no risk
+> in leaving the check unreported). `ready_for_review` in `on.pull_request.types` makes
+> sure taking a PR out of draft re-triggers a real run.
 
 > **Note:** If your repository has Branch Protection rules that prevent direct pushes,
 > add a bypass rule for the GitHub Actions bot

@@ -31,6 +31,12 @@ AI支援ソフトウェアプロジェクトのための共有開発憲章。
 bash <(curl -fsSL https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.sh)
 ```
 
+Windows PowerShell の場合：
+
+```powershell
+irm https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.ps1 | iex
+```
+
 スクリプトが git subtree のセットアップを自動化し、Claude Code が利用可能であれば
 初回セットアップ（INSTALL_CHECKLIST）の起動まで案内します。
 
@@ -86,12 +92,22 @@ docs/dev-charter/UPDATE_CHECKLIST.md を実行して
 
 ## Makefile Helper
 
+`git subtree pull` は作業ツリーに未コミットの変更があると失敗するため、
+実行前に自動で `git stash` し、完了後に `git stash pop` で戻す。
+
 ```
+.PHONY: update-charter
 update-charter:
 	git remote | grep -q '^dev-charter$$' || \
 	  git remote add dev-charter https://github.com/y-marui/dev-charter
 	git fetch dev-charter
-	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
+	@STASHED=0; \
+	if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$$(git ls-files --others --exclude-standard)" ]; then \
+		git stash push -u -m "update-charter"; \
+		STASHED=1; \
+	fi; \
+	git subtree pull --prefix=docs/dev-charter dev-charter main --squash; \
+	if [ "$$STASHED" = "1" ]; then git stash pop; fi
 ```
 
 ## Version Check (CI)
@@ -105,6 +121,7 @@ name: Dev Charter
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
   workflow_dispatch:
@@ -112,7 +129,7 @@ on:
 jobs:
   check:
     name: Check
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     uses: y-marui/dev-charter/.github/workflows/check-charter.yml@main
     permissions:
       contents: write
@@ -123,6 +140,10 @@ jobs:
 > **Note:** dependabot が作成した PR ではスキップされます（依存関係更新だけが動いている間はチェック不要という判断）。
 > repo が完全に静止している間はチェックが走らないため、活動に関わらず定期的に確認したい場合は
 > 上記に加えて低頻度の `schedule`（例：月1回）を併用してください。
+
+> **Note:** Draft PR ではスキップされます（draft はそもそもマージできないため、チェックが
+> 未報告のままでもリスクがない）。`on.pull_request.types` の `ready_for_review` により、
+> draft を解除した際は改めて実行されます。
 
 > **Note:** Branch Protection で direct push が禁止されている場合は、
 > GitHub Actions bot の bypass rule を追加してください
