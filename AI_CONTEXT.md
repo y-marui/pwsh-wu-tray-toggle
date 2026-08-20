@@ -1,66 +1,95 @@
-# AI_CONTEXT.md
-
 ## Reference Order
 
-AI はタスク開始時に以下の順で参照する:
+AI はタスク開始時に以下の順で参照する：
 
-1. README.md（概要・セットアップ）
-2. DEVELOPING.md（ビルド・実装規約・命名規則）
-
-必要に応じて以下を参照する（順不同）:
-- CONTRIBUTING.md（PR・Issue ルール）
-- docs/architecture.md（モジュール・コンポーネント構造）
-- docs/file-map.md（ファイルレベルの依存関係 ※情報が足りない・古い場合は適宜探索し、追記・更新する）
-- docs/specification.md（機能仕様・データフロー）
-- docs/ui-design.md（UI 設計・コンポーネント仕様）
+1. `README-jp.md`（このリポジトリの概要・導入・更新方法）
+2. `CHARTER_INDEX.md`（タスクに関係する憲章ファイルの特定）
+3. `CHARTER_INDEX.md` で特定したファイル（原則 1〜2 件）
 
 ## Project Overview
 
-Windows Update の自動更新をシステムトレイから停止・再開できる C# 製トレイアプリ。
+dev-charter の本体。他プロジェクトが `git subtree` で取り込む共有開発憲章。
+ドキュメントのみのリポジトリ（ソースコードなし）。
 
-- **言語:** C# (.NET 8, WinForms)
-- **対象OS:** Windows のみ
-- **主要ファイル:**
-  - `src/WuTrayToggle/TrayApplicationContext.cs` — トレイアイコン本体（System.Windows.Forms を使用）
-  - `src/WuTrayToggle/WindowsUpdateController.cs` — レジストリ確認・サービス制御
-  - `src/WuTrayToggle/ShortcutManager.cs` — デスクトップショートカット作成・削除（`--install` / `--uninstall`）
-  - `src/WuTrayToggle/Program.cs` — エントリポイント（引数解析・多重起動防止）
-  - `Makefile` — build / install / uninstall コマンド
+このファイルは **dev-charter リポジトリ自体を作業する AI 向け**のコンテキスト。
+採用先プロジェクトへの導入手順は `README-jp.md` を参照すること。
+
+### Technology Stack
+
+- Markdown：憲章・ガイドライン・チェックリスト
+- Bash：インストール・バージョン検証スクリプト（CI・pre-commit の実行基盤）
+- PowerShell：上記スクリプトの `.ps1` 版（`scripts/*.ps1`）。ローカル Windows 環境向けの並行実装で、CI では未使用（#57 参照）
+- GitHub Actions / pre-commit：CI・セキュリティ・文書品質の検証
+- アプリケーション用のランタイム・フレームワーク：なし
+
+### Main Directories
+
+| パス | 役割 |
+|---|---|
+| `/` | 共通原則・ポリシー・AI コンテキスト・導入手順 |
+| `topics/` | 技術・運用トピック別の詳細ガイドライン |
+| `scripts/` | インストール・バージョン検証スクリプト |
+| `.github/workflows/` | CI・VERSION 更新・採用先向け更新ワークフロー |
 
 ## Applied Charter Principles
 
-憲章参照: `docs/dev-charter/CHARTER_INDEX.md` でトピックを特定してから該当ファイルのみ読む。
-
-- **言語ポリシー:** README.md（英語・参照）と README-jp.md（日本語・正本）を同一コミットで更新する → `docs/dev-charter/LANGUAGE_POLICY.md`
-- **CI:** `.github/workflows/ci.yml` に `dotnet format` Lint + `dotnet publish` Build 集約 job → `docs/dev-charter/topics/CI_POLICY.md`
-- **コーディング原則:** YAGNI・変更最小限・DRY3回ルール → `docs/dev-charter/PRINCIPLES.md`
-
-## dev-charter Modification Rules
-
-`docs/dev-charter/` 配下のファイルは**直接編集しない**。
-
-- 変更が必要な場合は dev-charter リポジトリ本体に Issue を立て、`git subtree pull` でアップデートを取り込む
-- `git subtree pull` によるアップデートのみ許可する
-- プロジェクト固有のルールは `AI_CONTEXT.md` または専用ファイルに記載する
+- コンテキストが競合する場合は `AI_CONTEXT_HIERARCHY.md` の優先順位に従う
+- 変更範囲を必要最小限にし、YAGNI・既存パターン優先など `PRINCIPLES.md` の設計原則に従う
+- シークレット管理と検証は `SECURITY_POLICY.md` に従う
 
 ## Document Sync Rule
 
 仕様・ルール・構成に変更が生じたとき、変更と同じ作業内で関連ドキュメントを更新する。
-対象は docs/ 内のファイルに限らず、AI_CONTEXT.md・README.md・README-jp.md 等のルートファイルも含む。
+対象は docs/ 内のファイルに限らず、AI_CONTEXT.md・README.md 等のルートファイルも含む。
 
 ## Project-Specific Rules
 
-- `WindowsUpdateController.cs` はレジストリ書き込みと Windows サービス操作を行うため、変更時は管理者権限要件を考慮する
-- インストール先はデスクトップショートカット（`WU_TrayIcon.lnk`）のみ。レジストリへの永続インストールは行わない
+- **正本は日本語**。英語版（README.md）は翻訳。日本語版と英語版は同一コミットで更新する（`LANGUAGE_POLICY.md` 参照）
+- **Conventional Commits**（feat/fix/docs/chore）でコミットする
+- **`VERSION` は UTC の時間単位（`YYYY-MM-DDThhZ`）で管理する**。同じ日に複数回の意味のある更新が
+  あっても、時間が違えば別バージョンとして区別できる（分単位にしないのは、pre-commit フックが
+  書き込む時刻と実際の `git commit` 時刻が数秒ズレることがあり、分単位だと境界を跨いで
+  マージ時に CI が失敗するリスクがあるため）
+  - pre-commit フックが `end-of-file-fixer` と同様に**自動で書き換える**（コミット前に手動で
+    更新する必要はない。フックが未ステージの変更を作った場合は `git add VERSION` して
+    コミットし直す）
+  - **クラウド/エージェント環境**：ローカルの pre-commit フックが動作しない。CI の自動更新ワークフロー（`.github/workflows/update-version.yml`）が `VERSION` を自動的に更新してコミットするため、漏れた場合は CI が補完する。手動で更新する場合は `UPDATE=1 bash scripts/check-version-date.sh`
+- **新規ドキュメントを追加するとき**は正本の索引である `CHARTER_INDEX.md` を更新する
+- **憲章に追加できる原則・ルール**は複数の異なるプロジェクトに適用できるものに限る（1プロジェクト固有のルールは不可）
+- **dev-charter 全ドキュメントのセクションヘッダ**：日本語ドキュメントでも英語で記載する
+
+## CI Workflows
+
+このリポジトリには以下の GitHub Actions ワークフローが存在する：
+
+| ファイル | 目的 |
+|---|---|
+| `.github/workflows/ci.yml` | PR・main push に対して `pre-commit run --all-files` を実行し、`check-version-date` 等のフックを強制する |
+| `.github/workflows/update-version.yml` | 非フォーク PR で `VERSION` が古い場合に自動更新コミットを行う（cloud/agent 対応） |
+| `.github/workflows/check-charter.yml` | 採用先プロジェクトから呼び出す再利用可能ワークフロー（dev-charter 本体の CI ではない） |
+
+`ci.yml` の `Build` ジョブが Branch Protection の必須ステータスチェックとして機能する。
+
+## Security Hooks
+
+`core.hooksPath` が設定済みかどうかで手順が異なる：
+
+- **設定済み**（グローバルフックが pre-commit を呼ぶ）：`pre-commit install` 不要。`pre-commit run --all-files` で動作確認
+- **未設定**：`pre-commit install` 後に `pre-commit run --all-files` で動作確認
+
+pre-commit は、シークレット・ローカル絶対パス・VERSION 日付・ローカル dev-charter バージョン（sibling `../dev-charter` との比較）・Markdown の H2〜H6 の見出し言語・シェルスクリプトを機械的に検証する。日英文書の意味的一致など判断を要する項目は、AI または人間がレビューする。
+
+確認コマンド：`git config core.hooksPath`
 
 ## AI Tool Assignments
 
-- **使用ツール**：Claude Code、GitHub Copilot
-- **標準担当の正本**：`docs/dev-charter/AI_COLLABORATION_RULES.md` の「AI Tool Responsibilities」と「Rules for Multi-AI Usage」
-- **プロジェクト固有の上書き**：なし
+- **使用ツール**：Claude Code、Codex、GitHub Copilot、Gemini CLI、ローカル LLM（Ollama）
+- **標準担当の正本**：`AI_COLLABORATION_RULES.md` の「AI Tool Responsibilities」と「Rules for Multi-AI Usage」
+- **このリポジトリ固有の上書き**：なし
 
 ## Prohibited Actions
 
 - シークレット・認証情報のコミット
-- Windows 以外のプラットフォーム向けコードの追加
-- ソースコード以外のビルド成果物のコミット
+- 未完成・曖昧な原則のコミット（issue で管理する）
+- プロジェクト固有のルールを憲章に追加すること
+- ソースコード・ビルド成果物・ログのコミット

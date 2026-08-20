@@ -1,51 +1,174 @@
-# pwsh-wu-tray-toggle
+# Dev Charter (開発憲章)
 
 > **このファイルは正本（日本語版）です。**
 > 英語版（参照）は [README.md](README.md) を参照してください。
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![CI](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml)
-[![Charter Check](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml)
-[![GitHub Sponsors](https://img.shields.io/github/sponsors/y-marui?style=social)](https://github.com/sponsors/y-marui)
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-donate-yellow.svg)](https://www.buymeacoffee.com/y.marui)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LICENSE)
+[![check-charter CI](https://github.com/y-marui/dev-charter/actions/workflows/check-charter.yml/badge.svg)](https://github.com/y-marui/dev-charter/actions/workflows/check-charter.yml)
 
-Windows Update の自動更新を通知領域のトレイアイコンから停止・再開できる C# 製トレイアプリ。
+AI支援ソフトウェアプロジェクトのための共有開発憲章。
 
-## Setup
+このリポジトリは、プロジェクト横断的に使用される共通の哲学、アーキテクチャ原則、
+および開発ルールを定義します。
 
-Windows と管理者権限が必要です。
+## Documents
 
-### インストーラーから（推奨）
+憲章ドキュメントの一覧とトピック別の参照先は、正本である [CHARTER_INDEX.md](CHARTER_INDEX.md) を参照してください。
 
-[Releases](https://github.com/y-marui/pwsh-wu-tray-toggle/releases) から最新の `WuTrayToggle-vX.Y.Z-win-x64.msi` をダウンロードして実行します。UAC昇格後、スタートメニューとデスクトップにショートカットが作成されます。アンインストールは「アプリと機能」から行えます。
+## How to Use
 
-### ソースからビルドする場合
+1. `git subtree` で `docs/dev-charter/` に取り込む
+2. AI に dev-charter を読ませ、プロジェクトルートに `AI_CONTEXT.md` と AI ツール設定ファイルを生成させる
+3. 憲章が更新されたら `git subtree pull` 後、AI にコンテキストファイルを追従させる
 
-.NET 8 SDK が必要です。
+構成仕様は [AI_TOOL_SETUP.md](AI_TOOL_SETUP.md) を参照。
 
-```powershell
-make install
+## Quick Install
+
+プロジェクトのルートで実行してください：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.sh)
 ```
 
-自己完結の単一exeをビルドし、デスクトップに `WU_TrayIcon.lnk` ショートカットを作成します。ダブルクリックで起動します。
+Windows PowerShell の場合：
 
-## Usage
+```powershell
+irm https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.ps1 | iex
+```
 
-| コマンド | 説明 |
+スクリプトが git subtree のセットアップを自動化し、Claude Code が利用可能であれば
+初回セットアップ（INSTALL_CHECKLIST）の起動まで案内します。
+
+> **Note:** インストール先やブランチを変更する場合は環境変数で指定できます：
+> `CHARTER_PREFIX=path/to/charter bash <(curl -fsSL .../install.sh)`
+
+## Install (git subtree)
+
+```
+git remote add dev-charter https://github.com/y-marui/dev-charter
+git fetch dev-charter
+git subtree add --prefix=docs/dev-charter dev-charter main --squash
+```
+
+インストール後、以下のプロンプトを AI ツールに貼り付けてください：
+
+```
+docs/dev-charter/INSTALL_CHECKLIST.md を実行して
+```
+
+## Update
+
+`dev-charter` リモートが未設定の場合（プロジェクトを clone した直後など）は先に追加する：
+
+```
+git remote add dev-charter https://github.com/y-marui/dev-charter
+git subtree pull --prefix=docs/dev-charter dev-charter main --squash
+```
+
+> **Note（テンプレートリポジトリから作成したプロジェクト）:**
+> GitHub テンプレートはファイルのみコピーし git 履歴を引き継がないため、`git subtree pull` は失敗します。
+> `check-charter.yml` ワークフローがこのケースを自動検出して対処します。
+> 手動で更新する場合は `git subtree pull` の代わりに以下を実行してください：
+> ```bash
+> git remote add dev-charter https://github.com/y-marui/dev-charter || true
+> git fetch dev-charter
+> SPLIT=$(git rev-parse dev-charter/main)
+> rm -rf docs/dev-charter/
+> mkdir -p docs/dev-charter/
+> git archive dev-charter/main | tar -x -C docs/dev-charter/
+> git add docs/dev-charter/
+> git commit -m "Squashed 'docs/dev-charter/' content from commit ${SPLIT}
+>
+> git-subtree-dir: docs/dev-charter
+> git-subtree-split: ${SPLIT}"
+> ```
+
+更新後、以下のプロンプトを AI ツールに貼り付けてください：
+
+```
+docs/dev-charter/UPDATE_CHECKLIST.md を実行して
+```
+
+## Makefile Helper
+
+`git subtree pull` は作業ツリーに未コミットの変更があると失敗するため、
+実行前に自動で `git stash` し、完了後に `git stash pop` で戻す。
+
+```
+.PHONY: update-charter
+update-charter:
+	git remote | grep -q '^dev-charter$$' || \
+	  git remote add dev-charter https://github.com/y-marui/dev-charter
+	git fetch dev-charter
+	@STASHED=0; \
+	if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$$(git ls-files --others --exclude-standard)" ]; then \
+		git stash push -u -m "update-charter"; \
+		STASHED=1; \
+	fi; \
+	git subtree pull --prefix=docs/dev-charter dev-charter main --squash; \
+	if [ "$$STASHED" = "1" ]; then git stash pop; fi
+```
+
+## Version Check (CI)
+
+`.github/workflows/dev-charter-check.yml` をプロジェクトに追加すると、
+PR作成や main への push をきっかけに最新バージョンを確認し、古い場合は update PR を作成します
+（直近7日以内に成功したチェックがあればスキップするため、活発な repo でも毎回チェックが走ることはありません）。
+
+```yaml
+name: Dev Charter
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Check
+    if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    uses: y-marui/dev-charter/.github/workflows/check-charter.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+```
+
+> **Note:** dependabot が作成した PR ではスキップされます（依存関係更新だけが動いている間はチェック不要という判断）。
+> repo が完全に静止している間はチェックが走らないため、活動に関わらず定期的に確認したい場合は
+> 上記に加えて低頻度の `schedule`（例：月1回）を併用してください。
+
+> **Note:** Draft PR ではスキップされます（draft はそもそもマージできないため、チェックが
+> 未報告のままでもリスクがない）。`on.pull_request.types` の `ready_for_review` により、
+> draft を解除した際は改めて実行されます。
+
+> **Note:** Branch Protection で direct push が禁止されている場合は、
+> GitHub Actions bot の bypass rule を追加してください
+> （Settings > Rules > Rulesets > Bypass list > GitHub Actions）。
+
+## Badge for Adopting Projects
+
+プロジェクトの README にこのバッジを追加すると、dev-charter の更新状態を可視化できます。
+
+### Workflow Status Badge
+
+dev-charter が最新かどうかを表示します。
+
+```markdown
+[![Charter Check](https://github.com/{owner}/{repo}/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/{owner}/{repo}/actions/workflows/dev-charter-check.yml)
+```
+
+`{owner}` と `{repo}` を自分のリポジトリのオーナー名・リポジトリ名に置き換えてください。
+
+| 状態 | Status Badge |
 |---|---|
-| `make install` | ビルドしてデスクトップにショートカットをインストール |
-| `make uninstall` | ショートカットを削除 |
-| `make msi` | MSIインストーラーを `dist/` にビルド |
-
-トレイアイコンを右クリックしてメニューを操作します：
-
-- **現在の状態を確認** — アプリバージョン、ポリシー、サービスの状態をポップアップ表示
-- **停止 (制御開始)** — グループポリシー経由で Windows Update を停止
-- **再開 (通常)** — Windows Update を通常モードに戻す
-
-## License
-
-[MIT](LICENSE)
+| 未導入 / CI 未設定 | 赤（VERSION not found） |
+| 導入済み・最新 | 緑 |
+| 導入済み・更新必要 | 赤 |
 
 ---
+
 *この文書には英語版 [README.md](README.md) があります。編集時は同一コミットで更新してください。*
