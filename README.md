@@ -1,11 +1,11 @@
-# pwsh-wu-tray-toggle
+# csharp-wu-tray-toggle
 
 > **This is the reference (English) version.**
 > The canonical (Japanese) version is [README-jp.md](README-jp.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![CI](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/ci.yml)
-[![Charter Check](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/pwsh-wu-tray-toggle/actions/workflows/dev-charter-check.yml)
+[![CI](https://github.com/y-marui/csharp-wu-tray-toggle/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/csharp-wu-tray-toggle/actions/workflows/ci.yml)
+[![Charter Check](https://github.com/y-marui/csharp-wu-tray-toggle/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/csharp-wu-tray-toggle/actions/workflows/dev-charter-check.yml)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/y-marui?style=social)](https://github.com/sponsors/y-marui)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-donate-yellow.svg)](https://www.buymeacoffee.com/y.marui)
 
@@ -17,7 +17,7 @@ Requires Windows and administrator privileges.
 
 ### From the installer (recommended)
 
-Download the latest `WuTrayToggle-vX.Y.Z-win-x64.msi` from [Releases](https://github.com/y-marui/pwsh-wu-tray-toggle/releases) and run it. After the UAC prompt, Start Menu and desktop shortcuts are created. Uninstall from "Apps & features".
+Download the latest `WuTrayToggle-vX.Y.Z-win-x64.msi` from [Releases](https://github.com/y-marui/csharp-wu-tray-toggle/releases) and run it. After the UAC prompt, Start Menu and desktop shortcuts are created. Uninstall from "Apps & features".
 
 ### Building from source
 
